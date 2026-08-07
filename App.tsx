@@ -1,20 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Authenticator } from "@aws-amplify/ui-react-native";
+import { Amplify } from "aws-amplify";
+import { Provider } from "react-redux";
+import store from "./src/redux/store";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { createStaticNavigation } from "@react-navigation/native";
+import RootBottomTabs from "./src/nav/navigators/RootBottomTabs";
+import amplify_outputs from "./amplify_outputs.json";
+
+Amplify.configure(amplify_outputs);
+
+const Navigator = createStaticNavigation(RootBottomTabs);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Authenticator.Provider>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <Navigator />
+        </SafeAreaProvider>
+      </Provider>
+    </Authenticator.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
