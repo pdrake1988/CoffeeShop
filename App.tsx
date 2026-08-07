@@ -1,4 +1,4 @@
-import { Authenticator } from "@aws-amplify/ui-react-native";
+import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
 import { Amplify } from "aws-amplify";
 import { Provider } from "react-redux";
 import store from "./src/redux/store";
@@ -11,12 +11,22 @@ Amplify.configure(amplify_outputs);
 
 const Navigator = createStaticNavigation(RootBottomTabs);
 
+function AppContent() {
+  const { authStatus } = useAuthenticator();
+
+  if (authStatus !== "authenticated") {
+    return <Authenticator />;
+  }
+
+  return <Navigator />;
+}
+
 export default function App() {
   return (
     <Authenticator.Provider>
       <Provider store={store}>
         <SafeAreaProvider>
-          <Navigator />
+          <AppContent />
         </SafeAreaProvider>
       </Provider>
     </Authenticator.Provider>
